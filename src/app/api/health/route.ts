@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma, ensureSchema, getDatabaseConfig } from "@/lib/prisma";
+import { prisma, ensureSchema } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
@@ -12,11 +12,13 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   const adminPasswordGesetzt = Boolean(process.env.ADMIN_PASSWORD);
 
-  const { url } = getDatabaseConfig();
+  // Bewusst die rohen Env-Variablen prüfen (nicht den Datei-Fallback),
+  // damit ein unkonfiguriertes Deployment klar als "nicht-gesetzt" erscheint.
+  const rawUrl = process.env.DATABASE_URL ?? process.env.TURSO_DATABASE_URL ?? "";
   let datenbank: string;
-  if (url.startsWith("libsql://")) {
+  if (rawUrl.startsWith("libsql://")) {
     datenbank = "turso";
-  } else if (url.startsWith("file:")) {
+  } else if (rawUrl.startsWith("file:")) {
     datenbank = "lokale-datei";
   } else {
     datenbank = "nicht-gesetzt";
