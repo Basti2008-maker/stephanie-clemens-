@@ -15,20 +15,30 @@ export function LoginForm() {
     setLoading(true);
     setError(null);
 
-    const response = await fetch("/api/admin/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password }),
-    });
+    try {
+      const response = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
 
-    setLoading(false);
+      setLoading(false);
 
-    if (!response.ok) {
-      setError("Falsches Passwort.");
-      return;
+      if (!response.ok) {
+        if (response.status !== 401) {
+          const data = (await response.json().catch(() => null)) as { error?: string } | null;
+          setError(data?.error ?? "Anmeldung derzeit nicht möglich.");
+        } else {
+          setError("Falsches Passwort.");
+        }
+        return;
+      }
+
+      router.refresh();
+    } catch {
+      setLoading(false);
+      setError("Server nicht erreichbar. Bitte später erneut versuchen.");
     }
-
-    router.refresh();
   }
 
   return (

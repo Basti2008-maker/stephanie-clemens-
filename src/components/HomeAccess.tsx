@@ -26,6 +26,7 @@ export function HomeAccess() {
 
     // Andernfalls als Admin-Passwort prüfen (serverseitig, sicher).
     setLoading(true);
+    let serverError: string | null = null;
     try {
       const response = await fetch("/api/admin/login", {
         method: "POST",
@@ -37,12 +38,19 @@ export function HomeAccess() {
         router.push("/admin");
         return;
       }
+
+      // Konfigurationsfehler (z. B. ADMIN_PASSWORD fehlt auf dem Server)
+      // klar anzeigen statt eines irreführenden "Ungültiger Code".
+      if (response.status !== 401) {
+        const data = (await response.json().catch(() => null)) as { error?: string } | null;
+        serverError = data?.error ?? null;
+      }
     } catch {
-      // fällt unten in die Fehlermeldung
+      serverError = "Server nicht erreichbar. Bitte später erneut versuchen.";
     }
 
     setLoading(false);
-    setError("Ungültiger Code, bitte erneut versuchen.");
+    setError(serverError ?? "Ungültiger Code, bitte erneut versuchen.");
   }
 
   return (
