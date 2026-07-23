@@ -1,0 +1,30 @@
+# dependencies
+node_modules
+
+# next.js
+.next
+out
+
+# production
+build
+dist
+
+# env
+.env
+.env.local
+.env.*.local
+
+# local sqlite database
+*.db
+*.db-journal
+prisma/dev.db
+
+# vercel
+.vercel
+
+# claude code (lokale, persönliche Einstellungen)
+.claude/settings.local.json
+
+# misc
+.DS_Store
+*.log
