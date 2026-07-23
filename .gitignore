@@ -25,6 +25,9 @@ prisma/dev.db
 # claude code (lokale, persönliche Einstellungen)
 .claude/settings.local.json
 
+# separates Projekt im selben Ordner – gehört nicht zu diesem Repo
+echo-ai-app/
+
 # misc
 .DS_Store
 *.log
