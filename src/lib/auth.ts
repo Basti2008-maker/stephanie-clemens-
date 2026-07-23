@@ -20,10 +20,15 @@ function sign(value: string): string {
  * Vergleicht das eingegebene Passwort zeitkonstant über SHA-256-Digests,
  * damit weder Länge noch Inhalt des echten Passworts per Timing-Angriff
  * erraten werden können.
+ *
+ * Eingabe und Passwort werden vor dem Vergleich normalisiert (Leerzeichen
+ * am Rand entfernt, Kleinschreibung), damit z. B. "admin26.6.27" genauso
+ * akzeptiert wird wie "Admin26.6.27" – wie im Demo-Prototyp.
  */
 export function checkPassword(input: string): boolean {
-  const expected = process.env.ADMIN_PASSWORD ?? "";
-  const inputHash = crypto.createHash("sha256").update(input).digest();
+  const expected = (process.env.ADMIN_PASSWORD ?? "").trim().toLowerCase();
+  const normalizedInput = input.trim().toLowerCase();
+  const inputHash = crypto.createHash("sha256").update(normalizedInput).digest();
   const expectedHash = crypto.createHash("sha256").update(expected).digest();
   return crypto.timingSafeEqual(inputHash, expectedHash);
 }
