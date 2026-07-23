@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { prisma, ensureSchema } from "@/lib/prisma";
 import { rsvpSchema } from "@/lib/validation";
 
 export async function POST(request: NextRequest) {
@@ -26,7 +26,22 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true });
   }
 
-  await prisma.rsvp.create({ data: rest });
+  try {
+    await prisma.rsvp.create({ data: rest });
+  } catch (firstError) {
+    // Falls die Tabelle noch fehlt (frische Turso-Datenbank), einmal
+    // anlegen und erneut versuchen. Andere Fehler -> sauberer 503.
+    try {
+      await ensureSchema();
+      await prisma.rsvp.create({ data: rest });
+    } catch {
+      console.error("RSVP konnte nicht gespeichert werden:", firstError);
+      return NextResponse.json(
+        { error: "Die Anmeldung kann gerade nicht gespeichert werden. Bitte versuche es später erneut." },
+        { status: 503 }
+      );
+    }
+  }
 
   return NextResponse.json({ success: true });
 }

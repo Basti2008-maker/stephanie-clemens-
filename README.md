@@ -74,6 +74,14 @@ Der **Gäste-Code** steht in `NEXT_PUBLIC_RSVP_CODE` (Standard `26.6.27`). Er da
 
 ## 3. Produktionsdatenbank mit Turso einrichten
 
+**Einfachster Weg (empfohlen):** Im Vercel-Dashboard unter
+**Storage → Marketplace → Turso** die Integration hinzufügen. Sie legt die
+Datenbank an und setzt `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` automatisch –
+beide Namen werden vom Code direkt erkannt. Danach neu deployen und einmal
+`/api/health` aufrufen: Die Tabelle wird dabei automatisch angelegt.
+
+**Alternativ manuell per CLI:**
+
 1. Turso CLI installieren und einloggen (einmalig):
    ```bash
    npm install -g @tursodatabase/cli

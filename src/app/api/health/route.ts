@@ -1,20 +1,22 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { prisma, ensureSchema, getDatabaseConfig } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 /**
  * Konfigurations-Check für das Deployment. Gibt nur an, OB etwas gesetzt
  * ist – niemals die Werte selbst. Aufrufbar unter /api/health.
+ * Legt außerdem die Datenbanktabelle an, falls sie noch fehlt (idempotent),
+ * damit eine frisch verbundene Turso-Datenbank sofort einsatzbereit ist.
  */
 export async function GET() {
   const adminPasswordGesetzt = Boolean(process.env.ADMIN_PASSWORD);
 
-  const dbUrl = process.env.DATABASE_URL ?? "";
+  const { url } = getDatabaseConfig();
   let datenbank: string;
-  if (dbUrl.startsWith("libsql://")) {
+  if (url.startsWith("libsql://")) {
     datenbank = "turso";
-  } else if (dbUrl.startsWith("file:")) {
+  } else if (url.startsWith("file:")) {
     datenbank = "lokale-datei";
   } else {
     datenbank = "nicht-gesetzt";
@@ -23,10 +25,11 @@ export async function GET() {
   let datenbankErreichbar = false;
   let anmeldungen: number | null = null;
   try {
+    await ensureSchema();
     anmeldungen = await prisma.rsvp.count();
     datenbankErreichbar = true;
   } catch {
-    // Datenbank nicht erreichbar oder Schema fehlt
+    // Datenbank nicht erreichbar
   }
 
   const ok = adminPasswordGesetzt && datenbankErreichbar;
@@ -39,6 +42,6 @@ export async function GET() {
     anmeldungen,
     hinweis: ok
       ? "Alles bereit."
-      : "Auf Vercel unter Settings -> Environment Variables setzen: ADMIN_PASSWORD, DATABASE_URL und DATABASE_AUTH_TOKEN (Turso), optional NEXT_PUBLIC_RSVP_CODE. Danach neu deployen.",
+      : "Auf Vercel unter Settings -> Environment Variables setzen: ADMIN_PASSWORD sowie eine Turso-Datenbank verbinden (DATABASE_URL + DATABASE_AUTH_TOKEN oder Turso-Integration aus dem Vercel-Marketplace). Danach neu deployen und diese Seite erneut aufrufen.",
   });
 }
