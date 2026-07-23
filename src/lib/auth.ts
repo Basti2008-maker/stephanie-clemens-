@@ -64,15 +64,26 @@ export function isValidSession(value: string | undefined): boolean {
   const expectedSignature = sign(issuedAt);
   if (!expectedSignature) return false;
 
-  const a = Buffer.from(signature);
-  const b = Buffer.from(expectedSignature);
-  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return false;
+  try {
+    // CRITICAL FIX: Convert hex strings to Buffer with proper encoding
+    const a = Buffer.from(signature, "hex");
+    const b = Buffer.from(expectedSignature, "hex");
+    if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return false;
 
-  const age = Date.now() - Number(issuedAt);
-  return age >= 0 && age <= MAX_AGE * 1000;
+    const age = Date.now() - Number(issuedAt);
+    return age >= 0 && age <= MAX_AGE * 1000;
+  } catch (error) {
+    console.error("[Auth] Session validation error:", error);
+    return false;
+  }
 }
 
 export async function getIsAuthenticated(): Promise<boolean> {
-  const store = await cookies();
-  return isValidSession(store.get(COOKIE_NAME)?.value);
+  try {
+    const store = await cookies();
+    return isValidSession(store.get(COOKIE_NAME)?.value);
+  } catch (error) {
+    console.error("[Auth] Authentication check error:", error);
+    return false;
+  }
 }
