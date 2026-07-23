@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "echo-ai-app",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "echo-ai-app/serve.ps1"],
+      "port": 8080
+    },
+    {
+      "name": "stephanie-clemens-hochzeit",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "dev-server.ps1"],
+      "port": 3000
+    }
+  ]
+}
