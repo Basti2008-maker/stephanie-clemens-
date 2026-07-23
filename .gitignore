@@ -31,3 +31,6 @@ echo-ai-app/
 # misc
 .DS_Store
 *.log
+
+# typescript build cache
+tsconfig.tsbuildinfo
