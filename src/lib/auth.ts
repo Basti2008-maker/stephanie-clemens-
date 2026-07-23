@@ -44,13 +44,17 @@ export function isValidSession(value: string | undefined): boolean {
   const [issuedAt, signature] = value.split(".");
   if (!issuedAt || !signature) return false;
 
-  const expectedSignature = sign(issuedAt);
-  const a = Buffer.from(signature);
-  const b = Buffer.from(expectedSignature);
-  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return false;
+  try {
+    const expectedSignature = sign(issuedAt);
+    const a = Buffer.from(signature);
+    const b = Buffer.from(expectedSignature);
+    if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return false;
 
-  const age = Date.now() - Number(issuedAt);
-  return age >= 0 && age <= MAX_AGE * 1000;
+    const age = Date.now() - Number(issuedAt);
+    return age >= 0 && age <= MAX_AGE * 1000;
+  } catch {
+    return false;
+  }
 }
 
 export async function getIsAuthenticated(): Promise<boolean> {
