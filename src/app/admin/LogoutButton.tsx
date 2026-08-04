@@ -13,7 +13,7 @@ export function LogoutButton() {
   return (
     <button
       onClick={handleLogout}
-      className="rounded-md border border-stone-300 px-4 py-2 text-sm text-stone-700 transition hover:bg-stone-100"
+      className="rounded-md border border-line px-4 py-2 text-sm text-primary transition hover:bg-line/20"
     >
       Abmelden
     </button>

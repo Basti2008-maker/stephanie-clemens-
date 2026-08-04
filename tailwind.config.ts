@@ -4,9 +4,16 @@ const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      colors: {
+        bg: "var(--color-bg)",
+        primary: "var(--color-primary)",
+        line: "var(--color-line)",
+        error: "var(--color-error)",
+      },
       fontFamily: {
-        serif: ["var(--font-serif)", "Georgia", "serif"],
-        sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
+        // Nur eine Schriftart im gesamten Projekt.
+        serif: ["var(--font-instrument-serif)", "Georgia", '"Times New Roman"', "serif"],
+        sans: ["var(--font-instrument-serif)", "Georgia", '"Times New Roman"', "serif"],
       },
     },
   },

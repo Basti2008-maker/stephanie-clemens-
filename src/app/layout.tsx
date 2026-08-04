@@ -1,18 +1,13 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Playfair_Display, Lato } from "next/font/google";
+import { Instrument_Serif } from "next/font/google";
 import "./globals.css";
 
-const playfair = Playfair_Display({
+const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
-  variable: "--font-serif",
-  weight: ["400", "600", "700"],
-});
-
-const lato = Lato({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  weight: ["300", "400", "700"],
+  variable: "--font-instrument-serif",
+  weight: "400",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -22,10 +17,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="de">
-      <body className={`${playfair.variable} ${lato.variable} font-sans antialiased`}>
-        {children}
-      </body>
+    <html lang="de" className={instrumentSerif.variable}>
+      <body className="bg-bg text-primary antialiased">{children}</body>
     </html>
   );
 }

@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
-const RSVP_CODE = process.env.NEXT_PUBLIC_RSVP_CODE ?? "26.6.27";
+const RSVP_CODE = process.env.NEXT_PUBLIC_RSVP_CODE ?? "26062027";
 
 export function HomeAccess() {
   const router = useRouter();
@@ -18,8 +18,8 @@ export function HomeAccess() {
 
     const value = code.trim();
 
-    // Öffentlicher Gäste-Code führt direkt zum Anmeldeformular.
-    if (value === RSVP_CODE) {
+    // Gäste-Passwort führt direkt zum Anmeldeformular.
+    if (value === RSVP_CODE.trim()) {
       router.push("/rsvp");
       return;
     }
@@ -40,7 +40,7 @@ export function HomeAccess() {
       }
 
       // Konfigurationsfehler (z. B. ADMIN_PASSWORD fehlt auf dem Server)
-      // klar anzeigen statt eines irreführenden "Ungültiger Code".
+      // klar anzeigen statt eines irreführenden "Ungültiges Passwort".
       if (response.status !== 401) {
         const data = (await response.json().catch(() => null)) as { error?: string } | null;
         serverError = data?.error ?? null;
@@ -50,33 +50,36 @@ export function HomeAccess() {
     }
 
     setLoading(false);
-    setError(serverError ?? "Ungültiger Code, bitte erneut versuchen.");
+    setError(serverError ?? "Ungültiges Passwort, bitte erneut versuchen.");
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="flex flex-col items-center gap-3">
-      <div className="flex gap-2">
-        <label htmlFor="access-code" className="sr-only">
-          Code
-        </label>
-        <input
-          id="access-code"
-          type="text"
-          autoComplete="off"
-          placeholder="Code eingeben"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          className="w-56 rounded-full border border-stone-300 px-4 py-3 text-center text-stone-900 focus:border-stone-500 focus:outline-none"
-        />
-        <button
-          type="submit"
-          disabled={loading}
-          className="rounded-full bg-stone-900 px-6 py-3 font-sans text-sm uppercase tracking-wide text-white transition hover:bg-stone-700 disabled:opacity-50"
-        >
-          {loading ? "…" : "Weiter"}
-        </button>
-      </div>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+    <form onSubmit={handleSubmit} noValidate className="flex w-full flex-col items-center">
+      <label htmlFor="access-code" className="sr-only">
+        Passwort eingeben
+      </label>
+      <input
+        id="access-code"
+        type="password"
+        autoComplete="off"
+        placeholder="Passwort eingeben"
+        value={code}
+        onChange={(e) => setCode(e.target.value)}
+        aria-invalid={error ? true : undefined}
+        className={`w-full max-w-xs border-0 border-b bg-transparent px-1 py-2 text-center text-primary focus:outline-none focus:ring-0 ${
+          error ? "border-error focus:border-error" : "border-line focus:border-primary"
+        }`}
+      />
+
+      {error && <p className="mt-3 text-sm text-error">{error}</p>}
+
+      <button
+        type="submit"
+        disabled={loading}
+        className="mt-8 bg-primary px-10 py-3 text-sm uppercase tracking-[0.18em] text-bg transition hover:opacity-85 disabled:opacity-50"
+      >
+        {loading ? "Moment…" : "Weiter"}
+      </button>
     </form>
   );
 }

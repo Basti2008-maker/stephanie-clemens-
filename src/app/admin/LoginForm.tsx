@@ -44,10 +44,10 @@ export function LoginForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-sm rounded-lg border border-stone-200 bg-white p-8 shadow-sm"
+      className="w-full max-w-sm rounded-lg border border-line bg-bg p-8 shadow-sm"
     >
-      <h1 className="mb-6 font-serif text-2xl text-stone-900">Admin-Login</h1>
-      <label className="mb-1 block text-sm text-stone-600" htmlFor="password">
+      <h1 className="mb-6 text-2xl text-primary">Admin-Login</h1>
+      <label className="mb-1 block text-sm text-primary/80" htmlFor="password">
         Passwort
       </label>
       <input
@@ -57,13 +57,13 @@ export function LoginForm() {
         autoFocus
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        className="mb-4 w-full rounded-md border border-stone-300 px-3 py-2 focus:border-stone-500 focus:outline-none"
+        className="mb-4 w-full rounded-md border border-line px-3 py-2 focus:border-primary focus:outline-none"
       />
-      {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
+      {error && <p className="mb-4 text-sm text-error">{error}</p>}
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-md bg-stone-900 px-4 py-2 text-white transition hover:bg-stone-700 disabled:opacity-50"
+        className="w-full rounded-md bg-primary px-4 py-2 text-bg transition hover:opacity-85 disabled:opacity-50"
       >
         {loading ? "Wird geprüft…" : "Anmelden"}
       </button>

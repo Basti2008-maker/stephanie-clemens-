@@ -37,7 +37,7 @@ export function Countdown({ targetDate }: { targetDate: string }) {
   }
 
   if (timeLeft.isPast) {
-    return <p className="font-sans text-lg text-stone-600">Wir haben geheiratet! 🎉</p>;
+    return <p className="text-lg text-primary">Wir haben geheiratet!</p>;
   }
 
   const units = [
@@ -48,13 +48,15 @@ export function Countdown({ targetDate }: { targetDate: string }) {
   ];
 
   return (
-    <div className="flex gap-4 sm:gap-8" role="timer" aria-live="off">
+    <div className="flex gap-5 sm:gap-10" role="timer" aria-live="off">
       {units.map((unit) => (
         <div key={unit.label} className="flex flex-col items-center">
-          <span className="font-serif text-4xl text-stone-900 sm:text-5xl">
+          <span className="text-3xl tabular-nums text-primary sm:text-5xl">
             {String(unit.value).padStart(2, "0")}
           </span>
-          <span className="mt-1 text-xs uppercase tracking-wide text-stone-500">{unit.label}</span>
+          <span className="mt-1 text-[0.65rem] uppercase tracking-[0.2em] text-primary/70 sm:text-xs">
+            {unit.label}
+          </span>
         </div>
       ))}
     </div>

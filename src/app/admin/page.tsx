@@ -11,7 +11,7 @@ export default async function AdminPage() {
 
   if (!authenticated) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-stone-50 px-4">
+      <main className="flex min-h-screen items-center justify-center px-4">
         <LoginForm />
       </main>
     );
@@ -20,10 +20,10 @@ export default async function AdminPage() {
   const rsvps = await prisma.rsvp.findMany({ orderBy: { createdAt: "desc" } });
 
   return (
-    <main className="min-h-screen bg-stone-50 px-4 py-10 sm:px-8">
+    <main className="min-h-screen px-4 py-10 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex items-center justify-between">
-          <h1 className="font-serif text-3xl text-stone-900">Anmeldungen</h1>
+          <h1 className="text-3xl text-primary">Anmeldungen</h1>
           <LogoutButton />
         </div>
         <AdminTable

@@ -63,12 +63,12 @@ export function AdminTable({ rsvps }: { rsvps: Rsvp[] }) {
           placeholder="Suche nach Name oder E-Mail…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full max-w-xs rounded-md border border-stone-300 px-3 py-2 text-sm focus:border-stone-500 focus:outline-none"
+          className="w-full max-w-xs rounded-md border border-line px-3 py-2 text-sm focus:border-primary focus:outline-none"
         />
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value as SortKey)}
-          className="rounded-md border border-stone-300 px-3 py-2 text-sm focus:border-stone-500 focus:outline-none"
+          className="rounded-md border border-line px-3 py-2 text-sm focus:border-primary focus:outline-none"
         >
           <option value="date-desc">Anmeldedatum (neueste zuerst)</option>
           <option value="date-asc">Anmeldedatum (älteste zuerst)</option>
@@ -79,25 +79,25 @@ export function AdminTable({ rsvps }: { rsvps: Rsvp[] }) {
         <div className="ml-auto flex gap-2">
           <a
             href={`/api/admin/export?sort=${sort}`}
-            className="rounded-md bg-stone-900 px-4 py-2 text-sm text-white transition hover:bg-stone-700"
+            className="rounded-md bg-primary px-4 py-2 text-sm text-bg transition hover:opacity-85"
           >
             Als Excel exportieren
           </a>
           <button
             type="button"
             onClick={() => setConfirmOpen(true)}
-            className="rounded-md border border-stone-300 px-4 py-2 text-sm text-stone-700 transition hover:border-red-400 hover:text-red-700"
+            className="rounded-md border border-line px-4 py-2 text-sm text-primary transition hover:border-error hover:text-error"
           >
             Anmeldungen zurücksetzen
           </button>
         </div>
       </div>
 
-      <p className="mb-3 text-sm text-stone-500">{visible.length} Anmeldung(en)</p>
+      <p className="mb-3 text-sm text-primary/70">{visible.length} Anmeldung(en)</p>
 
-      <div className="overflow-x-auto rounded-lg border border-stone-200 bg-white">
+      <div className="overflow-x-auto rounded-lg border border-line bg-bg">
         <table className="w-full min-w-[720px] text-left text-sm">
-          <thead className="bg-stone-100 text-stone-600">
+          <thead className="bg-line/20 text-primary/80">
             <tr>
               <th className="px-4 py-3 font-medium">Name</th>
               <th className="px-4 py-3 font-medium">E-Mail</th>
@@ -108,7 +108,7 @@ export function AdminTable({ rsvps }: { rsvps: Rsvp[] }) {
           </thead>
           <tbody>
             {visible.map((r) => (
-              <tr key={r.id} className="border-t border-stone-100">
+              <tr key={r.id} className="border-t border-line/60">
                 <td className="px-4 py-3">
                   {r.firstName} {r.lastName}
                 </td>
@@ -117,12 +117,12 @@ export function AdminTable({ rsvps }: { rsvps: Rsvp[] }) {
                 <td className="px-4 py-3">
                   {r.street}, {r.zipCode} {r.city}, {r.country}
                 </td>
-                <td className="px-4 py-3 text-stone-500">{new Date(r.createdAt).toLocaleString("de-AT")}</td>
+                <td className="px-4 py-3 text-primary/70">{new Date(r.createdAt).toLocaleString("de-AT")}</td>
               </tr>
             ))}
             {visible.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-stone-400">
+                <td colSpan={5} className="px-4 py-6 text-center text-primary/60">
                   Keine Anmeldungen gefunden.
                 </td>
               </tr>
@@ -133,7 +133,7 @@ export function AdminTable({ rsvps }: { rsvps: Rsvp[] }) {
 
       {confirmOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/40 px-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-primary/30 px-4"
           onClick={(e) => {
             if (e.target === e.currentTarget) setConfirmOpen(false);
           }}
@@ -142,12 +142,12 @@ export function AdminTable({ rsvps }: { rsvps: Rsvp[] }) {
             role="alertdialog"
             aria-modal="true"
             aria-labelledby="reset-title"
-            className="w-full max-w-sm rounded-lg border border-stone-200 bg-white p-6 shadow-lg"
+            className="w-full max-w-sm rounded-lg border border-line bg-bg p-6 shadow-lg"
           >
-            <h2 id="reset-title" className="mb-2 font-serif text-xl text-stone-900">
+            <h2 id="reset-title" className="mb-2 text-xl text-primary">
               Bist du sicher?
             </h2>
-            <p className="mb-6 text-sm text-stone-600">
+            <p className="mb-6 text-sm text-primary/80">
               {rsvps.length === 0
                 ? "Es sind aktuell keine Anmeldungen vorhanden."
                 : `Dadurch werden alle ${rsvps.length} Anmeldung(en) unwiderruflich gelöscht.`}
@@ -156,7 +156,7 @@ export function AdminTable({ rsvps }: { rsvps: Rsvp[] }) {
               <button
                 type="button"
                 onClick={() => setConfirmOpen(false)}
-                className="rounded-md border border-stone-300 px-4 py-2 text-sm text-stone-700 transition hover:bg-stone-100"
+                className="rounded-md border border-line px-4 py-2 text-sm text-primary transition hover:bg-line/20"
               >
                 Abbrechen
               </button>
@@ -164,7 +164,7 @@ export function AdminTable({ rsvps }: { rsvps: Rsvp[] }) {
                 type="button"
                 onClick={handleReset}
                 disabled={resetting}
-                className="rounded-md bg-red-600 px-4 py-2 text-sm text-white transition hover:bg-red-700 disabled:opacity-50"
+                className="rounded-md bg-error px-4 py-2 text-sm text-bg transition hover:opacity-85 disabled:opacity-50"
               >
                 {resetting ? "Wird gelöscht…" : "Endgültig löschen"}
               </button>
