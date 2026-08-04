@@ -11,6 +11,9 @@ model Rsvp {
   id        String   @id @default(cuid())
   firstName String
   lastName  String
+  // Zweite Person, wenn sich ein Paar gemeinsam anmeldet.
+  partnerFirstName String?
+  partnerLastName  String?
   email     String
   phone     String
   street    String

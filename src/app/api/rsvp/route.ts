@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { website, ...rest } = parsed.data;
+  const { website, isCouple, partnerFirstName, partnerLastName, ...rest } = parsed.data;
 
   // Honeypot: Bots füllen dieses versteckte Feld aus. Wir täuschen Erfolg
   // vor, speichern die Anmeldung aber nicht.
@@ -26,14 +26,21 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true });
   }
 
+  // Die zweite Person wird nur gespeichert, wenn die Paar-Option aktiv ist.
+  const data = {
+    ...rest,
+    partnerFirstName: isCouple && partnerFirstName ? partnerFirstName : null,
+    partnerLastName: isCouple && partnerLastName ? partnerLastName : null,
+  };
+
   try {
-    await prisma.rsvp.create({ data: rest });
+    await prisma.rsvp.create({ data });
   } catch (firstError) {
     // Falls die Tabelle noch fehlt (frische Turso-Datenbank), einmal
     // anlegen und erneut versuchen. Andere Fehler -> sauberer 503.
     try {
       await ensureSchema();
-      await prisma.rsvp.create({ data: rest });
+      await prisma.rsvp.create({ data });
     } catch {
       console.error("RSVP konnte nicht gespeichert werden:", firstError);
       return NextResponse.json(

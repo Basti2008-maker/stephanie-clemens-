@@ -58,6 +58,8 @@ export async function ensureSchema(): Promise<void> {
       "id" TEXT NOT NULL PRIMARY KEY,
       "firstName" TEXT NOT NULL,
       "lastName" TEXT NOT NULL,
+      "partnerFirstName" TEXT,
+      "partnerLastName" TEXT,
       "email" TEXT NOT NULL,
       "phone" TEXT NOT NULL,
       "street" TEXT NOT NULL,
@@ -67,4 +69,16 @@ export async function ensureSchema(): Promise<void> {
       "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
     )
   `);
+
+  // Spalten, die es beim ersten Anlegen der Tabelle noch nicht gab,
+  // nachtraeglich ergaenzen. Existiert die Spalte bereits, wirft SQLite
+  // einen Fehler, den wir bewusst ignorieren – dadurch ist der Aufruf
+  // beliebig oft wiederholbar.
+  for (const column of ["partnerFirstName", "partnerLastName"]) {
+    try {
+      await prisma.$executeRawUnsafe(`ALTER TABLE "Rsvp" ADD COLUMN "${column}" TEXT`);
+    } catch {
+      // Spalte ist bereits vorhanden.
+    }
+  }
 }

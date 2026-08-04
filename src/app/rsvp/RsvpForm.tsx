@@ -7,6 +7,9 @@ import { rsvpSchema } from "@/lib/validation";
 type FormState = {
   firstName: string;
   lastName: string;
+  isCouple: boolean;
+  partnerFirstName: string;
+  partnerLastName: string;
   email: string;
   phone: string;
   street: string;
@@ -19,6 +22,9 @@ type FormState = {
 const initialState: FormState = {
   firstName: "",
   lastName: "",
+  isCouple: false,
+  partnerFirstName: "",
+  partnerLastName: "",
   email: "",
   phone: "",
   street: "",
@@ -165,6 +171,65 @@ export function RsvpForm() {
           />
         </Field>
       </div>
+
+      <label htmlFor="isCouple" className="flex cursor-pointer items-center gap-3 text-sm text-primary">
+        <input
+          id="isCouple"
+          type="checkbox"
+          checked={form.isCouple}
+          onChange={(e) => {
+            const checked = e.target.checked;
+            setForm((prev) => ({
+              ...prev,
+              isCouple: checked,
+              // Beim Abwählen die Felder der zweiten Person leeren.
+              partnerFirstName: checked ? prev.partnerFirstName : "",
+              partnerLastName: checked ? prev.partnerLastName : "",
+            }));
+            if (!checked) {
+              setErrors((prev) => {
+                const next = { ...prev };
+                delete next.partnerFirstName;
+                delete next.partnerLastName;
+                return next;
+              });
+            }
+          }}
+          className="h-4 w-4 accent-[color:var(--color-primary)]"
+        />
+        Wir melden uns als Paar an
+      </label>
+
+      {form.isCouple && (
+        <div className="grid gap-6 sm:grid-cols-2">
+          <Field
+            label="Vorname der zweiten Person"
+            htmlFor="partnerFirstName"
+            error={errors.partnerFirstName}
+          >
+            <input
+              id="partnerFirstName"
+              autoComplete="off"
+              className={fieldClass("partnerFirstName")}
+              value={form.partnerFirstName}
+              onChange={(e) => update("partnerFirstName", e.target.value)}
+            />
+          </Field>
+          <Field
+            label="Nachname der zweiten Person"
+            htmlFor="partnerLastName"
+            error={errors.partnerLastName}
+          >
+            <input
+              id="partnerLastName"
+              autoComplete="off"
+              className={fieldClass("partnerLastName")}
+              value={form.partnerLastName}
+              onChange={(e) => update("partnerLastName", e.target.value)}
+            />
+          </Field>
+        </div>
+      )}
 
       <Field label="E-Mail" htmlFor="email" error={errors.email}>
         <input

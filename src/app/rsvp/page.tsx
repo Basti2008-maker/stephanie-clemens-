@@ -4,8 +4,10 @@ import { Blumen } from "@/components/Blumen";
 
 export default function RsvpPage() {
   return (
-    <main className="relative min-h-screen overflow-hidden px-6 py-12">
-      <Blumen corner="bottom-left" />
+    <main className="relative min-h-screen overflow-x-hidden px-6 py-12">
+      {/* Bleiben beim Scrollen an ihrer Bildschirmecke stehen. */}
+      <Blumen corner="bottom-left" fixed />
+      <Blumen corner="top-right" fixed />
 
       <div className="relative z-10 mx-auto w-full max-w-xl">
         <Image

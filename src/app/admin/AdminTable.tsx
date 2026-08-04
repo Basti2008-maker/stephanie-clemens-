@@ -7,6 +7,8 @@ type Rsvp = {
   id: string;
   firstName: string;
   lastName: string;
+  partnerFirstName: string | null;
+  partnerLastName: string | null;
   email: string;
   phone: string;
   street: string;
@@ -37,7 +39,8 @@ export function AdminTable({ rsvps }: { rsvps: Rsvp[] }) {
     const term = search.trim().toLowerCase();
     const filtered = rsvps.filter((r) => {
       if (!term) return true;
-      const haystack = `${r.firstName} ${r.lastName} ${r.email}`.toLowerCase();
+      const haystack =
+        `${r.firstName} ${r.lastName} ${r.partnerFirstName ?? ""} ${r.partnerLastName ?? ""} ${r.email}`.toLowerCase();
       return haystack.includes(term);
     });
     return [...filtered].sort(SORTERS[sort]);
@@ -111,6 +114,11 @@ export function AdminTable({ rsvps }: { rsvps: Rsvp[] }) {
               <tr key={r.id} className="border-t border-line/60">
                 <td className="px-4 py-3">
                   {r.firstName} {r.lastName}
+                  {r.partnerFirstName && (
+                    <span className="block text-primary/70">
+                      &amp; {r.partnerFirstName} {r.partnerLastName}
+                    </span>
+                  )}
                 </td>
                 <td className="px-4 py-3">{r.email}</td>
                 <td className="px-4 py-3">{r.phone}</td>

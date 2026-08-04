@@ -28,6 +28,8 @@ export async function GET(request: NextRequest) {
   sheet.columns = [
     { header: "Vorname", key: "firstName", width: 18 },
     { header: "Nachname", key: "lastName", width: 18 },
+    { header: "Vorname 2. Person", key: "partnerFirstName", width: 18 },
+    { header: "Nachname 2. Person", key: "partnerLastName", width: 18 },
     { header: "E-Mail", key: "email", width: 28 },
     { header: "Telefon", key: "phone", width: 18 },
     { header: "Straße", key: "street", width: 24 },
@@ -42,6 +44,8 @@ export async function GET(request: NextRequest) {
     sheet.addRow({
       firstName: rsvp.firstName,
       lastName: rsvp.lastName,
+      partnerFirstName: rsvp.partnerFirstName ?? "",
+      partnerLastName: rsvp.partnerLastName ?? "",
       email: rsvp.email,
       phone: rsvp.phone,
       street: rsvp.street,
