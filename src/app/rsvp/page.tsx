@@ -19,7 +19,8 @@ export default function RsvpPage() {
           className="mx-auto h-auto w-full max-w-[600px]"
         />
 
-        <h1 className="mt-6 text-center text-3xl text-primary sm:text-4xl">
+        {/* Einziger Schriftzug in Medusa – alle uebrigen Texte bleiben Instrument Serif. */}
+        <h1 className="font-medusa mt-4 text-center text-primary leading-tight text-[40px] sm:text-[64px]">
           Stephanie &amp; Clemens
         </h1>
 

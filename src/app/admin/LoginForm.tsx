@@ -47,7 +47,7 @@ export function LoginForm() {
       className="w-full max-w-sm rounded-lg border border-line bg-bg p-8 shadow-sm"
     >
       <h1 className="mb-6 text-2xl text-primary">Admin-Login</h1>
-      <label className="mb-1 block text-sm text-primary/80" htmlFor="password">
+      <label className="mb-1 block text-sm text-primary" htmlFor="password">
         Passwort
       </label>
       <input

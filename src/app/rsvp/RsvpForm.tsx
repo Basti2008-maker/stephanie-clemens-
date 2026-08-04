@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import { rsvpSchema } from "@/lib/validation";
 
@@ -37,6 +37,10 @@ const initialState: FormState = {
 const inputBase =
   "w-full border-0 border-b bg-transparent px-1 py-2 text-primary focus:outline-none focus:ring-0";
 
+// Gefuellter Button: creme Schrift auf Primaerfarbe, damit sie lesbar bleibt.
+const buttonKlasse =
+  "bg-primary px-10 py-3 text-sm uppercase tracking-[0.18em] text-bg transition hover:opacity-85 disabled:opacity-50";
+
 function Field({
   label,
   htmlFor,
@@ -50,7 +54,7 @@ function Field({
 }) {
   return (
     <div>
-      <label htmlFor={htmlFor} className="mb-1 block text-sm text-primary/80">
+      <label htmlFor={htmlFor} className="mb-1 block text-sm text-primary">
         {label}
       </label>
       {children}
@@ -65,6 +69,14 @@ export function RsvpForm() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  // Die Felder werden erst gerendert, wenn der Button geklickt wurde.
+  const [showForm, setShowForm] = useState(false);
+  const firstFieldRef = useRef<HTMLInputElement>(null);
+
+  // Nach dem Einblenden den Fokus ins erste Feld setzen.
+  useEffect(() => {
+    if (showForm) firstFieldRef.current?.focus();
+  }, [showForm]);
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -129,13 +141,24 @@ export function RsvpForm() {
   return (
     <>
       <p className="mx-auto mb-3 max-w-md text-center text-primary">
-        Damit unsere Einladung den Weg zu euch findet, bitten wir euch um eure Adresse.
+        Um euch unsere Einladung mit weiteren Details zukommen zu lassen, bitten wir euch, einmal
+        eure Adresse einzugeben.
       </p>
-      <p className="mx-auto mb-10 max-w-md text-center text-sm text-primary/80">
-        Bei Paaren reicht ein Eintrag. Bitte nennt uns dabei beide Vornamen.
+      <p className="mx-auto mb-10 max-w-md text-center text-sm text-primary">
+        Bei Paaren reicht es aus, wenn eine Person die gemeinsame Adresse eingibt. Bitte gebt aber
+        beide Vornamen an.
       </p>
 
-      <form onSubmit={handleSubmit} noValidate className="space-y-6">
+      {!showForm ? (
+        <div className="flex justify-center">
+          <button type="button" onClick={() => setShowForm(true)} className={buttonKlasse}>
+            Adresse eingeben
+          </button>
+        </div>
+      ) : (
+        <div className="formular-einblenden">
+          <div className="overflow-hidden">
+            <form onSubmit={handleSubmit} noValidate className="space-y-6">
       {/* Honeypot-Feld: für Menschen unsichtbar, Bots füllen es oft trotzdem aus. */}
       <div className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
         <label htmlFor="website">Website</label>
@@ -154,6 +177,7 @@ export function RsvpForm() {
         <Field label="Vorname" htmlFor="firstName" error={errors.firstName}>
           <input
             id="firstName"
+            ref={firstFieldRef}
             autoComplete="given-name"
             className={fieldClass("firstName")}
             value={form.firstName}
@@ -296,14 +320,13 @@ export function RsvpForm() {
 
       {submitError && <p className="text-sm text-error">{submitError}</p>}
 
-      <button
-        type="submit"
-        disabled={submitting}
-        className="mt-2 w-full bg-primary px-6 py-3 text-sm uppercase tracking-[0.18em] text-bg transition hover:opacity-85 disabled:opacity-50"
-      >
-          {submitting ? "Wird gesendet…" : "Absenden"}
-        </button>
-      </form>
+              <button type="submit" disabled={submitting} className={`mt-2 w-full ${buttonKlasse}`}>
+                {submitting ? "Wird gesendet…" : "Absenden"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 }

@@ -96,11 +96,11 @@ export function AdminTable({ rsvps }: { rsvps: Rsvp[] }) {
         </div>
       </div>
 
-      <p className="mb-3 text-sm text-primary/70">{visible.length} Anmeldung(en)</p>
+      <p className="mb-3 text-sm text-primary">{visible.length} Anmeldung(en)</p>
 
       <div className="overflow-x-auto rounded-lg border border-line bg-bg">
         <table className="w-full min-w-[720px] text-left text-sm">
-          <thead className="bg-line/20 text-primary/80">
+          <thead className="bg-line/20 text-primary">
             <tr>
               <th className="px-4 py-3 font-medium">Name</th>
               <th className="px-4 py-3 font-medium">E-Mail</th>
@@ -115,7 +115,7 @@ export function AdminTable({ rsvps }: { rsvps: Rsvp[] }) {
                 <td className="px-4 py-3">
                   {r.firstName} {r.lastName}
                   {r.partnerFirstName && (
-                    <span className="block text-primary/70">
+                    <span className="block text-primary">
                       &amp; {r.partnerFirstName} {r.partnerLastName}
                     </span>
                   )}
@@ -125,12 +125,12 @@ export function AdminTable({ rsvps }: { rsvps: Rsvp[] }) {
                 <td className="px-4 py-3">
                   {r.street}, {r.zipCode} {r.city}, {r.country}
                 </td>
-                <td className="px-4 py-3 text-primary/70">{new Date(r.createdAt).toLocaleString("de-AT")}</td>
+                <td className="px-4 py-3 text-primary">{new Date(r.createdAt).toLocaleString("de-AT")}</td>
               </tr>
             ))}
             {visible.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-primary/60">
+                <td colSpan={5} className="px-4 py-6 text-center text-primary">
                   Keine Anmeldungen gefunden.
                 </td>
               </tr>
@@ -155,7 +155,7 @@ export function AdminTable({ rsvps }: { rsvps: Rsvp[] }) {
             <h2 id="reset-title" className="mb-2 text-xl text-primary">
               Bist du sicher?
             </h2>
-            <p className="mb-6 text-sm text-primary/80">
+            <p className="mb-6 text-sm text-primary">
               {rsvps.length === 0
                 ? "Es sind aktuell keine Anmeldungen vorhanden."
                 : `Dadurch werden alle ${rsvps.length} Anmeldung(en) unwiderruflich gelöscht.`}

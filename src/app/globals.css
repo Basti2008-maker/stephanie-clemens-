@@ -9,12 +9,52 @@
   --color-error: #a4503d;
 }
 
+/*
+ * Medusa Regular – ausschliesslich fuer den Schriftzug "Stephanie & Clemens".
+ *
+ * HINWEIS: Die Schriftdateien liegen noch nicht im Projekt. Sobald
+ * public/fonts/Medusa.woff2 (und optional Medusa.otf) vorhanden sind, greift
+ * die Schrift ohne weitere Codeaenderung. Bis dahin rendert der Browser
+ * ueber die Fallback-Kette ("Brush Script MT", cursive).
+ */
+@font-face {
+  font-family: "Medusa";
+  src:
+    url("/fonts/Medusa.woff2") format("woff2"),
+    url("/fonts/Medusa.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 html,
 body {
   background-color: var(--color-bg);
   color: var(--color-primary);
   font-family: var(--font-instrument-serif), Georgia, "Times New Roman", serif;
   font-weight: 400;
+}
+
+/* Einheitliche Schriftfarbe: alles erbt die Logo-Farbe. */
+h1,
+h2,
+h3,
+h4,
+p,
+span,
+label,
+li,
+td,
+th,
+button,
+a {
+  color: inherit;
+}
+
+.font-medusa {
+  font-family: "Medusa", "Brush Script MT", cursive;
+  font-weight: 400;
+  font-style: normal;
 }
 
 /* Eingabefelder: kein Rahmen, kein Hintergrund, nur eine feine Linie darunter. */
@@ -29,4 +69,32 @@ input::placeholder,
 textarea::placeholder {
   color: var(--color-primary);
   opacity: 0.5;
+}
+
+/*
+ * Einblenden des Adressformulars: Fade und leichtes Aufklappen der Hoehe.
+ * Das Aufklappen laeuft ueber grid-template-rows (0fr -> 1fr), damit die
+ * tatsaechliche Inhaltshoehe animiert wird, ohne sie vorher zu kennen.
+ */
+@keyframes formular-einblenden {
+  from {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+  to {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+}
+
+.formular-einblenden {
+  display: grid;
+  grid-template-rows: 1fr;
+  animation: formular-einblenden 300ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .formular-einblenden {
+    animation: none;
+  }
 }

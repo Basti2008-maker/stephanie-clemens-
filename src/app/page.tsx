@@ -12,7 +12,7 @@ export default function HomePage() {
       <Blumen corner="bottom-right" />
 
       <div className="relative z-10 flex w-full max-w-md flex-col items-center text-center">
-        <h1 className="text-3xl tracking-wide text-primary sm:text-4xl">Wir heiraten</h1>
+        <h1 className="text-3xl tracking-wide text-primary sm:text-4xl">Wir heiraten!</h1>
 
         <Image
           src="/images/SC_Embleme.svg"
