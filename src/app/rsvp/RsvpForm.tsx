@@ -37,13 +37,14 @@ const initialState: FormState = {
 const inputBase =
   "w-full border-0 border-b bg-transparent px-1 py-2 text-primary focus:outline-none focus:ring-0";
 
-// Gefuellter Button: creme Schrift auf Primaerfarbe, damit sie lesbar bleibt.
-const buttonKlasse =
-  "bg-primary px-10 py-3 text-sm uppercase tracking-[0.18em] text-bg transition hover:opacity-85 disabled:opacity-50";
-
 // "Anmelden": gleiche Typografie, aber ohne Flaeche – nur gruene Schrift.
 const anmeldenKlasse =
   "px-10 py-3 text-sm uppercase tracking-[0.18em] text-primary transition hover:opacity-70";
+
+// "Absenden": Schreibschrift und Farbe wie der Namenszug, ohne Flaeche.
+// Bewusst ohne Versalien und Sperrung – eine Schreibschrift wirkt sonst gebrochen.
+const absendenKlasse =
+  "font-medusa w-full py-2 text-4xl leading-tight text-primary transition hover:opacity-70 disabled:opacity-50";
 
 function Field({
   label,
@@ -149,16 +150,23 @@ export function RsvpForm() {
         eure Adresse einzugeben.
       </p>
 
-      {!showForm ? (
-        <div className="flex justify-center">
-          <button type="button" onClick={() => setShowForm(true)} className={anmeldenKlasse}>
-            Anmelden
-          </button>
-        </div>
-      ) : (
-        <div className="formular-einblenden">
+      {/* Der Button bleibt stehen; die Felder klappen darunter auf. */}
+      <div className="flex justify-center">
+        <button
+          type="button"
+          onClick={() => setShowForm((offen) => !offen)}
+          aria-expanded={showForm}
+          aria-controls="adressformular"
+          className={anmeldenKlasse}
+        >
+          {showForm ? "Zuklappen" : "Anmelden"}
+        </button>
+      </div>
+
+      {showForm && (
+        <div id="adressformular" className="formular-einblenden mt-4">
           <div className="overflow-hidden">
-            {/* Erscheint gemeinsam mit den Feldern, direkt darueber. */}
+            {/* Erscheint gemeinsam mit den Feldern, direkt unter dem Button. */}
             <p className="mx-auto mb-8 max-w-md text-center text-sm text-primary">
               Bei Paaren reicht es aus, wenn eine Person die gemeinsame Adresse eingibt. Bitte gebt
               aber beide Vornamen an.
@@ -326,7 +334,7 @@ export function RsvpForm() {
 
       {submitError && <p className="text-sm text-error">{submitError}</p>}
 
-              <button type="submit" disabled={submitting} className={`mt-2 w-full ${buttonKlasse}`}>
+              <button type="submit" disabled={submitting} className={absendenKlasse}>
                 {submitting ? "Wird gesendet…" : "Absenden"}
               </button>
             </form>

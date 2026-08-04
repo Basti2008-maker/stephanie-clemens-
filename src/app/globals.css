@@ -4,7 +4,13 @@
 
 :root {
   --color-bg: #faf7eb;
-  --color-primary: #50783d;
+  /*
+   * Exaktes Gruen aus dem Brandkit: Alle gelieferten Vektordateien
+   * (SC_Embleme.svg, SC_mit_Savethedate_Wien.svg) definieren fill:#6B7554.
+   * Dadurch stimmt die Schriftfarbe exakt mit Emblem und Save-the-Date-
+   * Grafik ueberein, die auf der Seite eingebunden sind.
+   */
+  --color-primary: #6b7554;
   --color-line: #b3c6a4;
   --color-error: #a4503d;
 }
