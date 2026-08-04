@@ -41,6 +41,10 @@ const inputBase =
 const buttonKlasse =
   "bg-primary px-10 py-3 text-sm uppercase tracking-[0.18em] text-bg transition hover:opacity-85 disabled:opacity-50";
 
+// "Anmelden": gleiche Typografie, aber ohne Flaeche – nur gruene Schrift.
+const anmeldenKlasse =
+  "px-10 py-3 text-sm uppercase tracking-[0.18em] text-primary transition hover:opacity-70";
+
 function Field({
   label,
   htmlFor,
@@ -140,24 +144,26 @@ export function RsvpForm() {
 
   return (
     <>
-      <p className="mx-auto mb-3 max-w-md text-center text-primary">
+      <p className="mx-auto mb-6 max-w-md text-center text-primary">
         Um euch unsere Einladung mit weiteren Details zukommen zu lassen, bitten wir euch, einmal
         eure Adresse einzugeben.
-      </p>
-      <p className="mx-auto mb-10 max-w-md text-center text-sm text-primary">
-        Bei Paaren reicht es aus, wenn eine Person die gemeinsame Adresse eingibt. Bitte gebt aber
-        beide Vornamen an.
       </p>
 
       {!showForm ? (
         <div className="flex justify-center">
-          <button type="button" onClick={() => setShowForm(true)} className={buttonKlasse}>
-            Adresse eingeben
+          <button type="button" onClick={() => setShowForm(true)} className={anmeldenKlasse}>
+            Anmelden
           </button>
         </div>
       ) : (
         <div className="formular-einblenden">
           <div className="overflow-hidden">
+            {/* Erscheint gemeinsam mit den Feldern, direkt darueber. */}
+            <p className="mx-auto mb-8 max-w-md text-center text-sm text-primary">
+              Bei Paaren reicht es aus, wenn eine Person die gemeinsame Adresse eingibt. Bitte gebt
+              aber beide Vornamen an.
+            </p>
+
             <form onSubmit={handleSubmit} noValidate className="space-y-6">
       {/* Honeypot-Feld: für Menschen unsichtbar, Bots füllen es oft trotzdem aus. */}
       <div className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
