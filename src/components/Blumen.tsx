@@ -14,6 +14,18 @@ const POSITION: Record<Corner, string> = {
 };
 
 /**
+ * Weiches Auslaufen zur Bildmitte hin. Der Zuschnitt aus dem Rahmen kann die
+ * nach innen wachsenden Zweige nicht anders als durchschneiden – der
+ * Verlauf loest die Schnittkanten auf, sodass die Aeste sanft im Hintergrund
+ * verschwinden statt abrupt zu enden.
+ *
+ * Der Verlauf sitzt in der Ecke oben links, also in derselben Ecke, an der
+ * die Grafik verankert ist. Spiegelung und Drehung nehmen ihn mit.
+ */
+const FADE =
+  "radial-gradient(circle at top left, #000 34%, rgba(0,0,0,0.55) 56%, rgba(0,0,0,0.18) 70%, transparent 80%)";
+
+/**
  * Dezente Blumen-Dekoration aus dem Brandkit.
  * Die Illustration hat einen weissen Hintergrund – mix-blend-multiply laesst
  * dieses Weiss im creme Seitenhintergrund verschwinden, sodass nur die
@@ -26,14 +38,15 @@ export function Blumen({ corner, fixed = false }: { corner: Corner; fixed?: bool
   return (
     <div
       aria-hidden="true"
-      className={`${fixed ? "fixed" : "absolute"} pointer-events-none z-0 w-44 select-none mix-blend-multiply sm:w-64 lg:w-80 ${POSITION[corner]}`}
+      style={{ WebkitMaskImage: FADE, maskImage: FADE }}
+      className={`${fixed ? "fixed" : "absolute"} pointer-events-none z-0 w-48 select-none mix-blend-multiply sm:w-72 lg:w-[22rem] ${POSITION[corner]}`}
     >
       <Image
         src="/images/blumen-ecke.jpg"
         alt=""
-        width={950}
-        height={950}
-        className="h-auto w-full opacity-70"
+        width={1000}
+        height={1000}
+        className="h-auto w-full opacity-50"
         priority={false}
       />
     </div>

@@ -129,11 +129,10 @@ export function RsvpForm() {
   return (
     <>
       <p className="mx-auto mb-3 max-w-md text-center text-primary">
-        Um euch unsere Einladung zukommen zu lassen, bitten wir euch, einmal eure Adresse einzugeben.
+        Damit unsere Einladung den Weg zu euch findet, bitten wir euch um eure Adresse.
       </p>
       <p className="mx-auto mb-10 max-w-md text-center text-sm text-primary/80">
-        Bei Paaren reicht es aus, wenn eine Person die gemeinsame Adresse eingibt. Bitte gebt aber
-        beide Vornamen an.
+        Bei Paaren reicht ein Eintrag. Bitte nennt uns dabei beide Vornamen.
       </p>
 
       <form onSubmit={handleSubmit} noValidate className="space-y-6">
