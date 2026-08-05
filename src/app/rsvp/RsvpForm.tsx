@@ -41,10 +41,10 @@ const inputBase =
 const anmeldenKlasse =
   "rounded-full border border-primary px-10 py-3 text-sm uppercase tracking-[0.18em] text-primary transition hover:bg-primary/10";
 
-// "Absenden": Schreibschrift und Farbe wie der Namenszug, ohne Flaeche, mit Rand.
-// Bewusst ohne Versalien und Sperrung – eine Schreibschrift wirkt sonst gebrochen.
+// "Absenden": dieselbe Typografie wie "Anmelden" (Instrument Serif statt
+// Schreibschrift), volle Breite, sonst gleicher Rahmen-Stil.
 const absendenKlasse =
-  "font-medusa w-full rounded-full border border-primary px-6 py-2 text-4xl leading-tight text-primary transition hover:bg-primary/10 disabled:opacity-50";
+  "w-full rounded-full border border-primary px-10 py-3 text-sm uppercase tracking-[0.18em] text-primary transition hover:bg-primary/10 disabled:opacity-50";
 
 function Field({
   label,
