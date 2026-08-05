@@ -82,3 +82,22 @@ export async function ensureSchema(): Promise<void> {
     }
   }
 }
+
+/**
+ * Wie ensureSchema(), aber pro warmem Serverless-Prozess nur einmal
+ * ausgefuehrt statt bei jedem Aufruf erneut. Jede Stelle, die Spalten aus
+ * dem Rsvp-Modell liest oder schreibt, ruft dies zuerst auf – damit ein
+ * Deployment mit neuen Spalten (z. B. partnerFirstName) auf einer bereits
+ * bestehenden Datenbank (Turso) nicht mit "no such column" abstuerzt,
+ * ohne dass man daran denken muss, `prisma db push` manuell auszufuehren.
+ */
+let schemaReady: Promise<void> | undefined;
+export function ensureSchemaOnce(): Promise<void> {
+  if (!schemaReady) {
+    schemaReady = ensureSchema().catch((error) => {
+      schemaReady = undefined; // beim naechsten Aufruf erneut versuchen
+      throw error;
+    });
+  }
+  return schemaReady;
+}

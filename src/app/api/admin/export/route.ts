@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { Prisma } from "@prisma/client";
 import ExcelJS from "exceljs";
-import { prisma } from "@/lib/prisma";
+import { prisma, ensureSchemaOnce } from "@/lib/prisma";
 import { getIsAuthenticated } from "@/lib/auth";
 
 const ORDER_BY: Record<string, Prisma.RsvpOrderByWithRelationInput | Prisma.RsvpOrderByWithRelationInput[]> = {
@@ -18,6 +18,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Nicht autorisiert." }, { status: 401 });
   }
 
+  await ensureSchemaOnce();
   const sort = request.nextUrl.searchParams.get("sort") ?? "date-desc";
   const orderBy = ORDER_BY[sort] ?? ORDER_BY["date-desc"];
   const rsvps = await prisma.rsvp.findMany({ orderBy });

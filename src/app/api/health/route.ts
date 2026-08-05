@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma, ensureSchema } from "@/lib/prisma";
+import { prisma, ensureSchemaOnce } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +27,7 @@ export async function GET() {
   let datenbankErreichbar = false;
   let anmeldungen: number | null = null;
   try {
-    await ensureSchema();
+    await ensureSchemaOnce();
     anmeldungen = await prisma.rsvp.count();
     datenbankErreichbar = true;
   } catch {

@@ -1,5 +1,5 @@
 import { getIsAuthenticated } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { prisma, ensureSchemaOnce } from "@/lib/prisma";
 import { LoginForm } from "./LoginForm";
 import { AdminTable } from "./AdminTable";
 import { LogoutButton } from "./LogoutButton";
@@ -17,6 +17,7 @@ export default async function AdminPage() {
     );
   }
 
+  await ensureSchemaOnce();
   const rsvps = await prisma.rsvp.findMany({ orderBy: { createdAt: "desc" } });
 
   return (
