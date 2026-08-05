@@ -113,12 +113,18 @@ export function AdminTable({ rsvps }: { rsvps: Rsvp[] }) {
             {visible.map((r) => (
               <tr key={r.id} className="border-t border-line/60">
                 <td className="px-4 py-3">
-                  {r.firstName} {r.lastName}
-                  {r.partnerFirstName && (
-                    <span className="block text-primary">
-                      &amp; {r.partnerFirstName} {r.partnerLastName}
+                  {/* Bei Paaren beide Namen nebeneinander in derselben Zeile,
+                      mit demselben Nachnamen; bricht auf schmalen Bildschirmen um. */}
+                  <div className="flex flex-wrap gap-x-6 gap-y-1">
+                    <span>
+                      {r.firstName} {r.lastName}
                     </span>
-                  )}
+                    {r.partnerFirstName && (
+                      <span>
+                        {r.partnerFirstName} {r.partnerLastName || r.lastName}
+                      </span>
+                    )}
+                  </div>
                 </td>
                 <td className="px-4 py-3">{r.email}</td>
                 <td className="px-4 py-3">{r.phone}</td>

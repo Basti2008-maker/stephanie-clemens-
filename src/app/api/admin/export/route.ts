@@ -27,6 +27,7 @@ export async function GET(request: NextRequest) {
   const sheet = workbook.addWorksheet("Anmeldungen");
 
   sheet.columns = [
+    { header: "Personenanzahl", key: "personCount", width: 16 },
     { header: "Vorname", key: "firstName", width: 18 },
     { header: "Nachname", key: "lastName", width: 18 },
     { header: "Vorname 2. Person", key: "partnerFirstName", width: 18 },
@@ -42,7 +43,11 @@ export async function GET(request: NextRequest) {
   sheet.getRow(1).font = { bold: true };
 
   for (const rsvp of rsvps) {
+    // Bestehende Eintraege ohne zweiten Vornamen (null oder leer) zaehlen
+    // als eine Person; das kann bei keiner Zeile abstuerzen.
+    const personCount = rsvp.partnerFirstName?.trim() ? 2 : 1;
     sheet.addRow({
+      personCount,
       firstName: rsvp.firstName,
       lastName: rsvp.lastName,
       partnerFirstName: rsvp.partnerFirstName ?? "",
