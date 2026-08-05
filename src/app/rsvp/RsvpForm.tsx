@@ -37,14 +37,14 @@ const initialState: FormState = {
 const inputBase =
   "w-full border-0 border-b bg-transparent px-1 py-2 text-primary focus:outline-none focus:ring-0";
 
-// "Anmelden": gleiche Typografie, aber ohne Flaeche – nur gruene Schrift.
+// "Anmelden": gleiche Typografie, aber ohne Flaeche – nur gruene Schrift mit Rand.
 const anmeldenKlasse =
-  "px-10 py-3 text-sm uppercase tracking-[0.18em] text-primary transition hover:opacity-70";
+  "rounded-full border border-primary px-10 py-3 text-sm uppercase tracking-[0.18em] text-primary transition hover:bg-primary/10";
 
-// "Absenden": Schreibschrift und Farbe wie der Namenszug, ohne Flaeche.
+// "Absenden": Schreibschrift und Farbe wie der Namenszug, ohne Flaeche, mit Rand.
 // Bewusst ohne Versalien und Sperrung – eine Schreibschrift wirkt sonst gebrochen.
 const absendenKlasse =
-  "font-medusa w-full py-2 text-4xl leading-tight text-primary transition hover:opacity-70 disabled:opacity-50";
+  "font-medusa w-full rounded-full border border-primary px-6 py-2 text-4xl leading-tight text-primary transition hover:bg-primary/10 disabled:opacity-50";
 
 function Field({
   label,

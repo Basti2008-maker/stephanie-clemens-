@@ -20,8 +20,14 @@
  *
  * HINWEIS: Die Schriftdateien liegen noch nicht im Projekt. Sobald
  * public/fonts/Medusa.woff2 (und optional Medusa.otf) vorhanden sind, greift
- * die Schrift ohne weitere Codeaenderung. Bis dahin rendert der Browser
- * ueber die Fallback-Kette ("Brush Script MT", cursive).
+ * die Schrift ohne weitere Codeaenderung.
+ *
+ * Bis dahin rendert stattdessen die mitgelieferte Webfont (--font-script,
+ * siehe layout.tsx), NICHT eine Systemschrift. Eine Systemschrift als
+ * Fallback ("Brush Script MT", cursive) sieht je nach Geraet unterschiedlich
+ * aus, weil Windows und iOS/Android verschiedene Schreibschriften
+ * installiert haben – genau das war der gemeldete Unterschied zwischen
+ * Handy und Laptop.
  */
 @font-face {
   font-family: "Medusa";
@@ -58,7 +64,7 @@ a {
 }
 
 .font-medusa {
-  font-family: "Medusa", "Brush Script MT", cursive;
+  font-family: "Medusa", var(--font-script), "Brush Script MT", cursive;
   font-weight: 400;
   font-style: normal;
 }
