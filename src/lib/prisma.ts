@@ -47,7 +47,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 /**
- * Legt die Rsvp-Tabelle an, falls sie noch nicht existiert (idempotent).
+ * Legt alle Tabellen an, falls sie noch nicht existieren (idempotent).
  * Damit funktioniert eine frisch verbundene Turso-Datenbank sofort,
  * ohne dass manuell `prisma db push` ausgeführt werden muss.
  * Das DDL entspricht exakt dem, was Prisma für prisma/schema.prisma erzeugt.
@@ -70,6 +70,29 @@ export async function ensureSchema(): Promise<void> {
     )
   `);
 
+  await prisma.$executeRawUnsafe(`
+    CREATE TABLE IF NOT EXISTS "Sicherung" (
+      "id" TEXT NOT NULL PRIMARY KEY,
+      "grund" TEXT NOT NULL,
+      "anzahl" INTEGER NOT NULL,
+      "daten" TEXT NOT NULL,
+      "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  await prisma.$executeRawUnsafe(`
+    CREATE TABLE IF NOT EXISTS "LoginVersuch" (
+      "id" TEXT NOT NULL PRIMARY KEY,
+      "ipHash" TEXT NOT NULL,
+      "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  await prisma.$executeRawUnsafe(
+    `CREATE INDEX IF NOT EXISTS "LoginVersuch_ipHash_createdAt_idx" ON "LoginVersuch"("ipHash", "createdAt")`
+  );
+
+  // Es wird ausschliesslich ergaenzt (neue Tabellen, ADD COLUMN), nie
+  // geloescht oder umbenannt. Bestehende Anmeldungen bleiben unberuehrt.
   // Spalten, die es beim ersten Anlegen der Tabelle noch nicht gab,
   // nachtraeglich ergaenzen. Existiert die Spalte bereits, wirft SQLite
   // einen Fehler, den wir bewusst ignorieren – dadurch ist der Aufruf

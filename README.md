@@ -53,7 +53,7 @@ npm run dev
 Die Seite läuft nun unter [http://localhost:3000](http://localhost:3000).
 Auf der Startseite gibt es ein Code-Feld:
 
-- Gäste-Code (`NEXT_PUBLIC_RSVP_CODE`, Standard `26.6.27`) → Anmeldeformular
+- Gäste-Code (`NEXT_PUBLIC_RSVP_CODE`, Standard `26062027`) → Anmeldeformular
 - Admin-Code (`ADMIN_PASSWORD`) → Admin-Bereich
 
 Direkte Aufrufe funktionieren ebenfalls: `/` (Startseite), `/rsvp` (Formular),
@@ -66,7 +66,7 @@ Der **Admin-Code** wird ausschließlich über die Umgebungsvariable
 mit dem die Login-Session signiert wird – wähle also einen langen, zufälligen
 Wert.
 
-Der **Gäste-Code** steht in `NEXT_PUBLIC_RSVP_CODE` (Standard `26.6.27`). Er darf
+Der **Gäste-Code** steht in `NEXT_PUBLIC_RSVP_CODE` (Standard `26062027`). Er darf
 öffentlich sein, da er nur eine einfache Zugangshürde zum Formular ist.
 
 - Lokal: in `.env` eintragen (Datei wird nicht committet, siehe `.gitignore`)
@@ -111,33 +111,40 @@ beide Namen werden vom Code direkt erkannt. Danach neu deployen und einmal
    | Variable                      | Wert                                  |
    | ------------------------------ | -------------------------------------- |
    | `ADMIN_PASSWORD`                | dein sicherer Admin-Code               |
-   | `NEXT_PUBLIC_RSVP_CODE`         | Gäste-Code, z. B. `26.6.27`            |
+   | `NEXT_PUBLIC_RSVP_CODE`         | Gäste-Code, z. B. `26062027`            |
    | `DATABASE_URL`                  | `libsql://<deine-db>.turso.io`         |
    | `DATABASE_AUTH_TOKEN`           | dein Turso-Token                       |
    | `NEXT_PUBLIC_WEDDING_DATE`      | z. B. `2027-06-26T14:00:00`            |
-   | `NEXT_PUBLIC_WEDDING_LOCATION`  | z. B. `Schloss Musterstadt`            |
 
 4. Deploy auslösen. `prisma generate` läuft automatisch über das
    `postinstall`-Skript in `package.json`.
 
-Location und Uhrzeit lassen sich später jederzeit ändern, indem du
-`NEXT_PUBLIC_WEDDING_DATE` / `NEXT_PUBLIC_WEDDING_LOCATION` in Vercel anpasst
-und neu deployst – ohne Codeänderung.
+Die Uhrzeit lässt sich später ändern, indem du `NEXT_PUBLIC_WEDDING_DATE` in
+Vercel anpasst und neu deployst. Die Angabe gilt als Wiener Zeit.
 
 ## Funktionsübersicht
 
-- **Startseite**: Namen, Datum, Location (Platzhalter), Live-Countdown und ein
-  Code-Eingabefeld. Der Gäste-Code (`NEXT_PUBLIC_RSVP_CODE`, Standard `26.6.27`)
+- **Startseite**: Emblem, Live-Countdown und ein
+  Code-Eingabefeld. Der Gäste-Code (`NEXT_PUBLIC_RSVP_CODE`, Standard `26062027`)
   führt zum Anmeldeformular, der Admin-Code (`ADMIN_PASSWORD`) öffnet den
   Admin-Bereich.
 - **Anmeldeseite** (`/rsvp`): Formular mit Vorname, Nachname, E-Mail, Telefon
   und Adresse (Straße, PLZ, Ort, Land). Client- und serverseitige Validierung
   (Zod), Honeypot-Feld gegen Spam-Bots.
-- **Bestätigungsseite** (`/rsvp/success`): Dankestext nach dem Absenden.
 - **Admin-Bereich** (`/admin`): Passwortgeschützt. Tabelle aller Anmeldungen mit
   Suche (Name/E-Mail), Sortierung (Anmeldedatum, Name, Ort), Export als `.xlsx`
-  und einem „Zurücksetzen"-Knopf mit Sicherheitsabfrage, der alle Anmeldungen
-  löscht.
+  und einem „Zurücksetzen"-Knopf, der vorher eine Sicherung anlegt.
+
+## Datensicherheit
+
+- Die Datenbank wird nur ergänzt (neue Tabellen, neue Spalten), nie
+  umgebaut. Bestehende Anmeldungen bleiben bei jedem Deployment erhalten.
+- „Anmeldungen zurücksetzen“ verlangt das Wort LÖSCHEN und legt vorher
+  automatisch eine Sicherung an. Unter „Sicherungen“ im Admin-Bereich lässt
+  sich alles zurückholen.
+- Wichtig: `npm run db:push` nie gegen die Produktionsdatenbank ausführen,
+  wenn Felder umbenannt oder entfernt wurden. Vorher immer den Excel-Export
+  als zusätzliche Sicherung herunterladen.
 
 ## Sicherheit
 
@@ -145,6 +152,10 @@ und neu deployst – ohne Codeänderung.
 - Login-Session ist ein HMAC-signiertes, `httpOnly`-Cookie (8 Stunden gültig).
 - Passwortvergleich und Session-Signaturprüfung laufen zeitkonstant
   (`crypto.timingSafeEqual`), um Timing-Angriffe zu erschweren.
+- Nach 10 falschen Admin-Passwörtern in 15 Minuten wird der Absender gesperrt.
+- Admin-Seiten und Export werden nie zwischengespeichert, die Seite lässt
+  sich nicht in fremde Seiten einbetten.
+- Die Seite ist für Suchmaschinen gesperrt (noindex).
 - `.env`-Dateien und die lokale `dev.db` sind über `.gitignore` von Git
   ausgeschlossen – niemals Secrets committen.
 

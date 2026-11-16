@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
       zipCode: rsvp.zipCode,
       city: rsvp.city,
       country: rsvp.country,
-      createdAt: rsvp.createdAt.toLocaleString("de-AT"),
+      createdAt: rsvp.createdAt.toLocaleString("de-AT", { timeZone: "Europe/Vienna" }),
     });
   }
 

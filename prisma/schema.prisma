@@ -22,3 +22,22 @@ model Rsvp {
   country   String
   createdAt DateTime @default(now())
 }
+
+// Sicherung der Anmeldungen. Wird vor jedem Zuruecksetzen angelegt, damit
+// keine Daten verloren gehen. Wird nie automatisch geloescht.
+model Sicherung {
+  id        String   @id @default(cuid())
+  grund     String
+  anzahl    Int
+  daten     String // JSON der gesicherten Zeilen
+  createdAt DateTime @default(now())
+}
+
+// Fehlgeschlagene Admin-Anmeldungen, um Passwort-Raten zu bremsen.
+model LoginVersuch {
+  id        String   @id @default(cuid())
+  ipHash    String
+  createdAt DateTime @default(now())
+
+  @@index([ipHash, createdAt])
+}

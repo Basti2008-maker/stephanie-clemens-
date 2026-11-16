@@ -34,6 +34,8 @@ export function AdminTable({ rsvps }: { rsvps: Rsvp[] }) {
   const [sort, setSort] = useState<SortKey>("date-desc");
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [resetting, setResetting] = useState(false);
+  // Schutz vor versehentlichem Loeschen: Das Wort muss eingetippt werden.
+  const [bestaetigung, setBestaetigung] = useState("");
 
   const visible = useMemo(() => {
     const term = search.trim().toLowerCase();
@@ -52,6 +54,8 @@ export function AdminTable({ rsvps }: { rsvps: Rsvp[] }) {
       const response = await fetch("/api/admin/reset", { method: "POST" });
       if (!response.ok) throw new Error("Reset fehlgeschlagen");
       setConfirmOpen(false);
+      setBestaetigung("");
+      setResetting(false);
       router.refresh();
     } catch {
       setResetting(false);
@@ -164,8 +168,18 @@ export function AdminTable({ rsvps }: { rsvps: Rsvp[] }) {
             <p className="mb-6 text-sm text-primary">
               {rsvps.length === 0
                 ? "Es sind aktuell keine Anmeldungen vorhanden."
-                : `Dadurch werden alle ${rsvps.length} Anmeldung(en) unwiderruflich gelöscht.`}
+                : `Dadurch werden alle ${rsvps.length} Anmeldung(en) aus der Liste entfernt.`}
             </p>
+            <p className="mb-4 text-sm text-primary">
+              Die Anmeldungen werden vorher automatisch gesichert und lassen sich unter „Sicherungen“ zurückholen. Zum Löschen bitte LÖSCHEN eintippen.
+            </p>
+            <input
+              type="text"
+              value={bestaetigung}
+              onChange={(e) => setBestaetigung(e.target.value)}
+              aria-label="Zur Bestätigung LÖSCHEN eintippen"
+              className="mb-6 w-full rounded-md border border-line px-3 py-2 text-sm focus:border-primary focus:outline-none"
+            />
             <div className="flex justify-end gap-3">
               <button
                 type="button"
@@ -177,7 +191,7 @@ export function AdminTable({ rsvps }: { rsvps: Rsvp[] }) {
               <button
                 type="button"
                 onClick={handleReset}
-                disabled={resetting}
+                disabled={resetting || bestaetigung.trim() !== "LÖSCHEN"}
                 className="rounded-md bg-error px-4 py-2 text-sm text-bg transition hover:opacity-85 disabled:opacity-50"
               >
                 {resetting ? "Wird gelöscht…" : "Endgültig löschen"}

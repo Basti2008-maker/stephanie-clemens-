@@ -10,8 +10,19 @@ type TimeLeft = {
   isPast: boolean;
 };
 
+/**
+ * Ein Datum ohne Zeitzone (z. B. "2027-06-26T14:00:00") gilt als Wiener Zeit,
+ * egal in welcher Zeitzone das Geraet des Gastes steht.
+ */
+function wienerZeit(datum: string): number {
+  if (/(Z|[+-]\d{2}:?\d{2})$/.test(datum)) return new Date(datum).getTime();
+  const alsUtc = new Date(datum + "Z").getTime();
+  const inWien = new Date(new Date(alsUtc).toLocaleString("sv-SE", { timeZone: "Europe/Vienna" }).replace(" ", "T") + "Z");
+  return alsUtc - (inWien.getTime() - alsUtc);
+}
+
 function getTimeLeft(targetDate: string): TimeLeft {
-  const diff = new Date(targetDate).getTime() - Date.now();
+  const diff = wienerZeit(targetDate) - Date.now();
   const clamped = Math.max(diff, 0);
   return {
     days: Math.floor(clamped / (1000 * 60 * 60 * 24)),

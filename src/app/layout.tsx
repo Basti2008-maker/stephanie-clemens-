@@ -28,6 +28,8 @@ const scriptFont = Alex_Brush({
 export const metadata: Metadata = {
   title: "Stephanie & Clemens – Unsere Hochzeit",
   description: "26. Juni 2027 – Wir freuen uns, mit euch zu feiern.",
+  // Private Hochzeitsseite: nicht in Suchmaschinen aufnehmen.
+  robots: { index: false, follow: false },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
